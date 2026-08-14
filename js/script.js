@@ -143,7 +143,8 @@ function renderShopGrid(gridEl, filterContainerEl, searchInputEl) {
 
   const draw = () => {
     const query = (searchInputEl?.value || "").trim().toLowerCase();
-    const products = getProducts().filter((p) => {
+    const categoryKeys = new Set(getCategories().map((category) => category.key));
+    const products = getProducts().filter((p) => categoryKeys.has(p.category)).filter((p) => {
       const matchesCategory = currentCategory === "all" || p.category === currentCategory;
       const matchesSearch = !query || p.name.toLowerCase().includes(query) || (p.shortDescription || "").toLowerCase().includes(query);
       return matchesCategory && matchesSearch;
@@ -177,7 +178,8 @@ function renderShopGrid(gridEl, filterContainerEl, searchInputEl) {
 
 // Renders a limited set of featured products (e.g. on the home page)
 function renderFeaturedGrid(gridEl, count) {
-  const products = getProducts().slice(0, count);
+  const categoryKeys = new Set(getCategories().map((category) => category.key));
+  const products = getProducts().filter((product) => categoryKeys.has(product.category)).slice(0, count);
   gridEl.innerHTML = products.map(renderProductCard).join("");
   initProductInteractions(gridEl);
 }

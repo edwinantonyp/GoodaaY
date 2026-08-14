@@ -70,7 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!confirm(message)) return;
 
     try {
-      saveProducts(getProducts().filter((p) => !keys.includes(p.category)));
+      const productsToDelete = getProducts().filter((p) => keys.includes(p.category));
+      for (const product of productsToDelete) {
+        await deleteProduct(product.id);
+      }
       for (const category of toDelete) {
         await deleteCategory(category.key);
       }
