@@ -80,6 +80,15 @@
   Promise.all([initializeCategories(), initializeProducts()])
     .catch((error) => console.error("Category sync failed:", error))
     .finally(() => renderShopGrid(document.getElementById("product-grid"), document.getElementById("tag-filters"), document.getElementById("shop-search-input")));
+
+  setInterval(async () => {
+    try {
+      await Promise.all([initializeCategories(), initializeProducts()]);
+      renderShopGrid(document.getElementById("product-grid"), document.getElementById("tag-filters"), document.getElementById("shop-search-input"));
+    } catch (error) {
+      console.error("Store data refresh failed:", error);
+    }
+  }, 10000);
 </script>
 </body>
 </html>
