@@ -211,6 +211,10 @@ img {
   transform: translateY(-2px);
 }
 
+.checkout-submit {
+  width: 100%;
+}
+
 .btn-outline {
   background: transparent;
   color: var(--gold);
@@ -1048,6 +1052,10 @@ textarea:focus {
 }
 
 @media (max-width: 640px) {
+  .checkout-submit {
+    width: auto;
+  }
+
   .nav-links {
     position: absolute;
     top: 100%;
