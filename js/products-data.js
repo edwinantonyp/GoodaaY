@@ -1,5 +1,6 @@
 // Central product data store, backed by Supabase when configured with a local cache fallback.
 const PRODUCTS_KEY = "goodaay_products";
+let productsCache = null;
 
 const DEFAULT_PRODUCTS = [
   {
@@ -177,6 +178,7 @@ const CATEGORY_LABELS = {
 // CATEGORY_LABELS above remains only as a fallback for the original demo categories.
 
 function getProducts() {
+  if (Array.isArray(productsCache)) return productsCache;
   let stored;
   try {
     stored = JSON.parse(localStorage.getItem(PRODUCTS_KEY));
@@ -191,7 +193,14 @@ function getProducts() {
 }
 
 function saveProducts(products) {
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  productsCache = products;
+  if (hasSupabaseConfig()) return;
+  try {
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  } catch (error) {
+    if (error.name !== "QuotaExceededError") throw error;
+    console.warn("Product cache was too large for localStorage; keeping it in memory.");
+  }
 }
 
 function hasSupabaseConfig() {
@@ -265,7 +274,7 @@ async function initializeProducts() {
     }
   }
 
-  saveProducts(products);
+  productsCache = products;
   return products;
 }
 
