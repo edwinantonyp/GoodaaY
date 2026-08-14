@@ -209,8 +209,11 @@ function parseProductValue(value, fallback) {
 
 function fromSupabaseProduct(product) {
   return {
-    ...product,
+    id: product.id,
+    name: product.name,
+    category: product.category,
     price: Number(product.price),
+    shortDescription: product.short_description,
     images: parseProductValue(product.images, []),
     description: parseProductValue(product.description, []),
     meta: parseProductValue(product.meta, []),
@@ -236,7 +239,30 @@ async function initializeProducts() {
     headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
   });
   if (!response.ok) throw new Error(`Products request failed (${response.status})`);
-  const products = (await response.json()).map(fromSupabaseProduct);
+  let products = (await response.json()).map(fromSupabaseProduct);
+
+  if (!products.length) {
+    const seedResponse = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(DEFAULT_PRODUCTS.map(toSupabaseProduct)),
+    });
+    if (seedResponse.ok) {
+      products = DEFAULT_PRODUCTS.map((product) => ({ ...product }));
+    } else {
+      const retryResponse = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name`, {
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+      });
+      if (!retryResponse.ok) throw new Error(`Products seed failed (${seedResponse.status})`);
+      products = (await retryResponse.json()).map(fromSupabaseProduct);
+    }
+  }
+
   saveProducts(products);
   return products;
 }
