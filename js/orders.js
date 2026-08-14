@@ -20,7 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
 async function renderOrdersList() {
   const listEl = document.getElementById("orders-list");
   const emptyEl = document.getElementById("orders-empty");
-  const orders = await getOrders();
+  let orders;
+  try {
+    orders = await getOrders();
+  } catch (error) {
+    console.error("Load orders failed:", error);
+    emptyEl.style.display = "block";
+    emptyEl.textContent = `Unable to load orders. ${error.message}`;
+    listEl.innerHTML = "";
+    return;
+  }
 
   if (!orders.length) {
     emptyEl.style.display = "block";

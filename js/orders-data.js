@@ -54,14 +54,18 @@ function parseJsonValue(value, fallback) {
 }
 
 function fromSupabaseOrder(order) {
+  const customer = parseJsonValue(order.customer, {});
+  const payment = parseJsonValue(order.payment, {});
+  const items = parseJsonValue(order.items, []);
+
   return {
     id: order.id,
     date: order.date,
     status: order.status,
     paymentStatus: order.payment_status,
-    customer: parseJsonValue(order.customer, {}),
-    payment: parseJsonValue(order.payment, {}),
-    items: parseJsonValue(order.items, []),
+    customer: customer && typeof customer === "object" ? customer : {},
+    payment: payment && typeof payment === "object" ? payment : {},
+    items: Array.isArray(items) ? items : [],
     total: Number(order.total),
   };
 }
@@ -82,7 +86,7 @@ function toSupabaseOrder(order) {
 async function getOrders() {
   if (hasSupabaseConfig()) {
     const orders = await supabaseRequest("orders?select=*&order=date.desc");
-    return orders.map(fromSupabaseOrder);
+    return Array.isArray(orders) ? orders.map(fromSupabaseOrder) : [];
   }
   return getLocalOrders();
 }
