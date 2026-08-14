@@ -106,11 +106,14 @@
   </div>
 </footer>
 
-<script src="js/products-data.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/products-data.js?v=20260814-2"></script>
 <script src="js/categories-data.js"></script>
 <script src="js/script.js"></script>
 <script>
-  renderFeaturedGrid(document.getElementById("featured-grid"), 3);
+  initializeProducts()
+    .catch((error) => console.error("Product sync failed:", error))
+    .finally(() => renderFeaturedGrid(document.getElementById("featured-grid"), 3));
 </script>
 </body>
 </html>

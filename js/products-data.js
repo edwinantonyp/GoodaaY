@@ -1,4 +1,4 @@
-// Central product data store, backed by localStorage so admin edits reflect on customer pages.
+// Central product data store, backed by Supabase when configured with a local cache fallback.
 const PRODUCTS_KEY = "goodaay_products";
 
 const DEFAULT_PRODUCTS = [
@@ -194,6 +194,53 @@ function saveProducts(products) {
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
 }
 
+function hasSupabaseConfig() {
+  return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+}
+
+function parseProductValue(value, fallback) {
+  if (typeof value !== "string") return value ?? fallback;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+function fromSupabaseProduct(product) {
+  return {
+    ...product,
+    price: Number(product.price),
+    images: parseProductValue(product.images, []),
+    description: parseProductValue(product.description, []),
+    meta: parseProductValue(product.meta, []),
+  };
+}
+
+function toSupabaseProduct(product) {
+  return {
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    price: product.price,
+    images: JSON.stringify(product.images),
+    short_description: product.shortDescription,
+    description: JSON.stringify(product.description),
+    meta: JSON.stringify(product.meta),
+  };
+}
+
+async function initializeProducts() {
+  if (!hasSupabaseConfig()) return getProducts();
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name`, {
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+  });
+  if (!response.ok) throw new Error(`Products request failed (${response.status})`);
+  const products = (await response.json()).map(fromSupabaseProduct);
+  saveProducts(products);
+  return products;
+}
+
 function getProductById(id) {
   return getProducts().find((p) => p.id === id) || null;
 }
@@ -206,7 +253,7 @@ function slugify(text) {
     .replace(/(^-|-$)/g, "");
 }
 
-function addProduct(product) {
+async function addProduct(product) {
   const products = getProducts();
   let id = slugify(product.name);
   let suffix = 2;
@@ -214,24 +261,73 @@ function addProduct(product) {
     id = `${slugify(product.name)}-${suffix++}`;
   }
   const newProduct = { ...product, id };
+  if (hasSupabaseConfig()) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(toSupabaseProduct(newProduct)),
+    });
+    if (!response.ok) throw new Error(`Product save failed (${response.status})`);
+  }
   products.push(newProduct);
   saveProducts(products);
   return newProduct;
 }
 
-function updateProduct(id, updates) {
+async function updateProduct(id, updates) {
   const products = getProducts();
   const index = products.findIndex((p) => p.id === id);
   if (index === -1) return null;
   products[index] = { ...products[index], ...updates, id };
+  if (hasSupabaseConfig()) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(toSupabaseProduct(products[index])),
+    });
+    if (!response.ok) throw new Error(`Product update failed (${response.status})`);
+  }
   saveProducts(products);
   return products[index];
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
+  if (hasSupabaseConfig()) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+    });
+    if (!response.ok) throw new Error(`Product delete failed (${response.status})`);
+  }
   saveProducts(getProducts().filter((p) => p.id !== id));
 }
 
-function resetProductsToDefault() {
+async function resetProductsToDefault() {
+  if (hasSupabaseConfig()) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: "DELETE",
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+    });
+    if (!response.ok) throw new Error(`Product reset failed (${response.status})`);
+    const insertResponse = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(DEFAULT_PRODUCTS.map(toSupabaseProduct)),
+    });
+    if (!insertResponse.ok) throw new Error(`Default products save failed (${insertResponse.status})`);
+  }
   saveProducts(DEFAULT_PRODUCTS.map((p) => ({ ...p })));
 }

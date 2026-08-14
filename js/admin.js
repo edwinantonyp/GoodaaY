@@ -2,11 +2,11 @@
 let activeCategory = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupAdminLoginGate(() => initializeCategories().then(renderAdminUI).catch(handleCategoryError));
+  setupAdminLoginGate(() => Promise.all([initializeCategories(), initializeProducts()]).then(renderAdminUI).catch(handleCategoryError));
 
   document.getElementById("admin-reset")?.addEventListener("click", async () => {
     if (confirm("Reset the store back to the original demo categories and products? This removes any categories or products you added or edited.")) {
-      resetProductsToDefault();
+      await resetProductsToDefault();
       await resetCategoriesToDefault();
       activeCategory = null;
       renderAdminUI();
@@ -149,7 +149,7 @@ function renderCategoryTabs(categories) {
     .join("");
 
   tabsEl.querySelectorAll("button").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       activeCategory = btn.dataset.key;
       renderAdminUI();
     });
@@ -195,10 +195,10 @@ function renderActiveCategorySection() {
     btn.addEventListener("click", () => openProductModal(getProductById(btn.dataset.id)));
   });
   listEl.querySelectorAll(".admin-delete-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const product = getProductById(btn.dataset.id);
       if (confirm(`Delete "${product.name}"? This cannot be undone.`)) {
-        deleteProduct(btn.dataset.id);
+        await deleteProduct(btn.dataset.id);
         renderActiveCategorySection();
         showToast(`${product.name} deleted`);
       }
@@ -336,7 +336,7 @@ function openProductModal(product, defaultCategory) {
     if (e.target === overlay) close();
   });
 
-  overlay.querySelector("#product-form").addEventListener("submit", (e) => {
+  overlay.querySelector("#product-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (!currentImages.length) {
@@ -367,10 +367,10 @@ function openProductModal(product, defaultCategory) {
 
     try {
       if (isEdit) {
-        updateProduct(product.id, data);
+        await updateProduct(product.id, data);
         showToast(`${data.name} updated`);
       } else {
-        addProduct(data);
+        await addProduct(data);
         activeCategory = data.category;
         showToast(`${data.name} added`);
       }

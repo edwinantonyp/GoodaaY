@@ -59,13 +59,19 @@
   </div>
 </footer>
 
-<script src="js/products-data.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/products-data.js?v=20260814-2"></script>
 <script src="js/categories-data.js"></script>
 <script src="js/script.js"></script>
 <script>
-  const root = document.getElementById("product-detail-root");
-  const id = new URLSearchParams(window.location.search).get("id");
-  const product = id ? getProductById(id) : null;
+  initializeProducts()
+    .catch((error) => console.error("Product sync failed:", error))
+    .finally(renderProductDetail);
+
+  function renderProductDetail() {
+    const root = document.getElementById("product-detail-root");
+    const id = new URLSearchParams(window.location.search).get("id");
+    const product = id ? getProductById(id) : null;
 
   if (!product) {
     root.innerHTML = `
@@ -109,6 +115,7 @@
       </div>
     `;
     initProductInteractions(root);
+    }
   }
 </script>
 </body>
