@@ -1,14 +1,14 @@
-/* GooDaaY — Elegant dark theme shared styles */
+/* GooDaaY — Elegant light theme shared styles */
 
 :root {
-  --bg: #0f0f10;
-  --bg-alt: #17171a;
-  --surface: #1e1e22;
-  --border: #2c2c32;
-  --text: #ece9e2;
-  --text-muted: #a7a29a;
-  --gold: #d4af37;
-  --gold-soft: #e8cc7a;
+  --bg: #f7f4ee;
+  --bg-alt: #eee9df;
+  --surface: #fffdf9;
+  --border: #d8d0c3;
+  --text: #29261f;
+  --text-muted: #70695f;
+  --gold: #9a6b16;
+  --gold-soft: #bd8b32;
   --radius: 10px;
   --max-width: 1140px;
   font-size: 16px;
@@ -62,7 +62,7 @@ img {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(15, 15, 16, 0.9);
+  background: rgba(255, 253, 249, 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
 }
@@ -151,7 +151,7 @@ img {
   color: var(--text);
   padding: 0.8rem 1.2rem;
   border-radius: var(--radius);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(66, 50, 32, 0.12);
   z-index: 100;
   opacity: 0;
   transform: translateY(10px);
@@ -168,7 +168,7 @@ img {
 .hero {
   padding: 5rem 1.5rem;
   text-align: center;
-  background: radial-gradient(circle at 50% 0%, #221d10 0%, var(--bg) 60%);
+  background: radial-gradient(circle at 50% 0%, #fffaf0 0%, var(--bg) 60%);
   border-bottom: 1px solid var(--border);
 }
 
@@ -209,10 +209,6 @@ img {
   background: var(--gold-soft);
   color: #1a1408;
   transform: translateY(-2px);
-}
-
-.checkout-submit {
-  width: 100%;
 }
 
 .btn-outline {
@@ -315,7 +311,7 @@ section {
 
 .product-img {
   height: 180px;
-  background: linear-gradient(135deg, #2a2416, #1a1710);
+  background: linear-gradient(135deg, #f0e5cc, #fffaf0);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -328,7 +324,7 @@ section {
   position: relative;
   height: 180px;
   overflow: hidden;
-  background: #1a1710;
+  background: #f4ecdc;
 }
 
 .product-gallery img {
@@ -346,7 +342,7 @@ section {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(15, 15, 16, 0.6);
+  background: rgba(255, 253, 249, 0.72);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 50%;
@@ -1052,10 +1048,6 @@ textarea:focus {
 }
 
 @media (max-width: 640px) {
-  .checkout-submit {
-    width: auto;
-  }
-
   .nav-links {
     position: absolute;
     top: 100%;
