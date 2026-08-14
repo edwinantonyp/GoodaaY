@@ -44,15 +44,24 @@ function saveLocalOrders(orders) {
   localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
 }
 
+function parseJsonValue(value, fallback) {
+  if (typeof value !== "string") return value ?? fallback;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
 function fromSupabaseOrder(order) {
   return {
     id: order.id,
     date: order.date,
     status: order.status,
     paymentStatus: order.payment_status,
-    customer: order.customer,
-    payment: order.payment,
-    items: order.items,
+    customer: parseJsonValue(order.customer, {}),
+    payment: parseJsonValue(order.payment, {}),
+    items: parseJsonValue(order.items, []),
     total: Number(order.total),
   };
 }
