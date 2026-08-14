@@ -1013,6 +1013,16 @@ textarea:focus {
   gap: 2rem;
 }
 
+.order-detail-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.print-company-name {
+  display: none;
+}
+
 .order-item-row {
   display: flex;
   justify-content: space-between;
@@ -1079,5 +1089,39 @@ textarea:focus {
   .admin-product-row .btn,
   .admin-product-row button {
     grid-column: 2;
+  }
+}
+
+@media print {
+  .site-header,
+  #admin-lock,
+  .order-detail-actions,
+  .payment-status-select,
+  .order-status-select {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .order-card-header {
+    border-bottom-color: #999;
+  }
+
+  .print-company-name {
+    display: block;
+    margin-bottom: 1rem;
+    color: #000;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
   }
 }

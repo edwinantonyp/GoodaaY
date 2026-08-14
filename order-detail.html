@@ -76,6 +76,7 @@
       .join("");
 
     root.innerHTML = `
+      <div class="print-company-name">GooDaaY</div>
       <div class="order-card-header" style="align-items:center;">
         <div>
           <h1 style="margin-bottom:0.2rem;">Order #${order.id.slice(-6)}</h1>
@@ -91,7 +92,10 @@
         </div>
       </div>
 
-      <button class="btn btn-outline" id="order-detail-delete" style="margin-bottom:1.5rem;">Delete Order</button>
+      <div class="order-detail-actions">
+        <button class="btn btn-outline" id="order-detail-print" type="button">Print Order</button>
+        <button class="btn btn-outline" id="order-detail-delete" type="button">Delete Order</button>
+      </div>
 
       <div class="order-columns">
         <div>
@@ -122,6 +126,10 @@
     document.getElementById("order-detail-payment-status").addEventListener("change", async (e) => {
       await updatePaymentStatus(order.id, e.target.value);
       showToast("Payment status updated");
+    });
+
+    document.getElementById("order-detail-print").addEventListener("click", () => {
+      window.print();
     });
 
     document.getElementById("order-detail-delete").addEventListener("click", async () => {
