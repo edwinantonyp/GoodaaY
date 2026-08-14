@@ -33,6 +33,31 @@ with check (true);
 create policy "Anyone can delete orders"
 on public.orders for delete
 using (true);
+
+create table public.categories (
+  key text primary key,
+  label text not null
+);
+
+insert into public.categories (key, label) values
+  ('home', 'Home Decor'),
+  ('candles', 'Candles'),
+  ('textiles', 'Textiles'),
+  ('jewelry', 'Jewelry');
+
+alter table public.categories enable row level security;
+
+create policy "Anyone can read categories"
+on public.categories for select
+using (true);
+
+create policy "Anyone can create categories"
+on public.categories for insert
+with check (true);
+
+create policy "Anyone can delete categories"
+on public.categories for delete
+using (true);
 ```
 
 3. Copy the project URL and the public anon key from Project Settings > API into `js/supabase-config.js`.

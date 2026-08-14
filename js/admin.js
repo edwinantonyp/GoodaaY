@@ -2,25 +2,25 @@
 let activeCategory = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupAdminLoginGate(renderAdminUI);
+  setupAdminLoginGate(() => initializeCategories().then(renderAdminUI).catch(handleCategoryError));
 
-  document.getElementById("admin-reset")?.addEventListener("click", () => {
+  document.getElementById("admin-reset")?.addEventListener("click", async () => {
     if (confirm("Reset the store back to the original demo categories and products? This removes any categories or products you added or edited.")) {
       resetProductsToDefault();
-      resetCategoriesToDefault();
+      await resetCategoriesToDefault();
       activeCategory = null;
       renderAdminUI();
       showToast("Store reset to defaults");
     }
   });
 
-  document.getElementById("admin-new-category-form").addEventListener("submit", (e) => {
+  document.getElementById("admin-new-category-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const input = document.getElementById("admin-new-category-name");
     const label = input.value.trim();
     if (!label) return;
     try {
-      const category = addCategory(label);
+      const category = await addCategory(label);
       activeCategory = category.key;
       input.value = "";
       renderAdminUI();
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("admin-delete-category-form").addEventListener("submit", (e) => {
+  document.getElementById("admin-delete-category-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const keys = Array.from(dropdownMenu.querySelectorAll("input:checked")).map((cb) => cb.value);
     const categories = getCategories();
@@ -71,7 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       saveProducts(getProducts().filter((p) => !keys.includes(p.category)));
-      toDelete.forEach((c) => deleteCategory(c.key));
+      for (const category of toDelete) {
+        await deleteCategory(category.key);
+      }
       if (keys.includes(activeCategory)) activeCategory = null;
       dropdownMenu.classList.remove("open");
       renderAdminUI();
@@ -93,6 +95,12 @@ function renderAdminUI() {
   renderDeleteCategorySelect(categories);
   renderActiveCategorySection();
   renderStorageUsage();
+}
+
+function handleCategoryError(error) {
+  console.error("Category sync failed:", error);
+  alert(`Couldn't sync categories (${error.name}: ${error.message}).`);
+  renderAdminUI();
 }
 
 // Keeps the "Delete Category" checkbox dropdown in sync with the current category list
