@@ -235,13 +235,16 @@ function toSupabaseProduct(product) {
 
 async function initializeProducts() {
   if (!hasSupabaseConfig()) return getProducts();
+  const localProducts = getProducts();
   const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name`, {
     headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
   });
   if (!response.ok) throw new Error(`Products request failed (${response.status})`);
   let products = (await response.json()).map(fromSupabaseProduct);
 
-  if (!products.length) {
+  const knownIds = new Set(products.map((product) => product.id));
+  const missingProducts = localProducts.filter((product) => !knownIds.has(product.id));
+  if (missingProducts.length) {
     const seedResponse = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
       method: "POST",
       headers: {
@@ -250,15 +253,15 @@ async function initializeProducts() {
         "Content-Type": "application/json",
         Prefer: "return=minimal",
       },
-      body: JSON.stringify(DEFAULT_PRODUCTS.map(toSupabaseProduct)),
+      body: JSON.stringify(missingProducts.map(toSupabaseProduct)),
     });
     if (seedResponse.ok) {
-      products = DEFAULT_PRODUCTS.map((product) => ({ ...product }));
+      products = [...products, ...missingProducts];
     } else {
       const retryResponse = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=name`, {
         headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
       });
-      if (!retryResponse.ok) throw new Error(`Products seed failed (${seedResponse.status})`);
+      if (!retryResponse.ok) throw new Error(`Products sync failed (${seedResponse.status})`);
       products = (await retryResponse.json()).map(fromSupabaseProduct);
     }
   }
