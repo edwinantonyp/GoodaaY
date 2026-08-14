@@ -360,7 +360,7 @@ function initCheckoutPage(listEl) {
   toggleCardFields();
 
   const form = document.getElementById("checkout-form");
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const name = document.getElementById("co-name").value.trim();
@@ -390,7 +390,7 @@ function initCheckoutPage(listEl) {
     }
 
     try {
-      addOrder({
+      await addOrder({
         customer: { name, email, phone, address, city, zip, notes },
         payment: paymentDetails,
         // Images aren't shown on the orders dashboard; drop them so large uploaded

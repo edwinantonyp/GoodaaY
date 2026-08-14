@@ -6,21 +6,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".order-select").forEach((cb) => (cb.checked = e.target.checked));
   });
 
-  document.getElementById("orders-export-selected").addEventListener("click", () => {
+  document.getElementById("orders-export-selected").addEventListener("click", async () => {
     const ids = Array.from(document.querySelectorAll(".order-select:checked")).map((cb) => cb.dataset.id);
     if (!ids.length) {
       alert("Select at least one order to export.");
       return;
     }
-    const orders = getOrders().filter((o) => ids.includes(o.id));
+    const orders = (await getOrders()).filter((o) => ids.includes(o.id));
     downloadOrdersCsv(orders, orders.length === 1 ? `order-${orders[0].id.slice(-6)}.csv` : "orders-export.csv");
   });
 });
 
-function renderOrdersList() {
+async function renderOrdersList() {
   const listEl = document.getElementById("orders-list");
   const emptyEl = document.getElementById("orders-empty");
-  const orders = getOrders();
+  const orders = await getOrders();
 
   if (!orders.length) {
     emptyEl.style.display = "block";
@@ -70,26 +70,26 @@ function renderOrdersList() {
 
   listEl.querySelectorAll(".order-status-select").forEach((select) => {
     select.addEventListener("click", (e) => e.stopPropagation());
-    select.addEventListener("change", () => {
-      updateOrderStatus(select.dataset.id, select.value);
+    select.addEventListener("change", async () => {
+      await updateOrderStatus(select.dataset.id, select.value);
       showToast("Order status updated");
     });
   });
 
   listEl.querySelectorAll(".payment-status-select").forEach((select) => {
     select.addEventListener("click", (e) => e.stopPropagation());
-    select.addEventListener("change", () => {
-      updatePaymentStatus(select.dataset.id, select.value);
+    select.addEventListener("change", async () => {
+      await updatePaymentStatus(select.dataset.id, select.value);
       showToast("Payment status updated");
     });
   });
 
   listEl.querySelectorAll(".order-delete-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      const order = getOrderById(btn.dataset.id);
+      const order = await getOrderById(btn.dataset.id);
       if (confirm(`Delete order #${order.id.slice(-6)} from ${order.customer.name}? This cannot be undone.`)) {
-        deleteOrder(btn.dataset.id);
+        await deleteOrder(btn.dataset.id);
         renderOrdersList();
         showToast("Order deleted");
       }
@@ -97,9 +97,9 @@ function renderOrdersList() {
   });
 
   listEl.querySelectorAll(".order-export-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      const order = getOrderById(btn.dataset.id);
+      const order = await getOrderById(btn.dataset.id);
       downloadOrdersCsv([order], `order-${order.id.slice(-6)}.csv`);
     });
   });
