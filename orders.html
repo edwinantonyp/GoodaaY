@@ -46,7 +46,10 @@
         <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-muted); font-size:0.9rem;">
           <input type="checkbox" id="orders-select-all"> Select all
         </label>
-        <button id="orders-export-selected" class="btn btn-outline">Export Selected (CSV)</button>
+        <div style="display:flex; gap:0.6rem;">
+          <button id="orders-export-selected" class="btn btn-outline">Export Selected (CSV)</button>
+          <button id="orders-delete-selected" class="btn btn-outline">Delete Selected</button>
+        </div>
       </div>
 
       <div id="orders-empty" class="cart-empty" style="display:none;">No orders have been placed yet.</div>

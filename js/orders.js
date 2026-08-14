@@ -15,6 +15,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const orders = (await getOrders()).filter((o) => ids.includes(o.id));
     downloadOrdersCsv(orders, orders.length === 1 ? `order-${orders[0].id.slice(-6)}.csv` : "orders-export.csv");
   });
+
+  document.getElementById("orders-delete-selected").addEventListener("click", async () => {
+    const ids = Array.from(document.querySelectorAll(".order-select:checked")).map((cb) => cb.dataset.id);
+    if (!ids.length) {
+      alert("Select at least one order to delete.");
+      return;
+    }
+    const message = ids.length === 1 ? "Delete the selected order? This cannot be undone." : `Delete these ${ids.length} selected orders? This cannot be undone.`;
+    if (!confirm(message)) return;
+
+    try {
+      for (const id of ids) {
+        await deleteOrder(id);
+      }
+      document.getElementById("orders-select-all").checked = false;
+      await renderOrdersList();
+      showToast(`${ids.length} order${ids.length === 1 ? "" : "s"} deleted`);
+    } catch (error) {
+      console.error("Delete selected orders failed:", error);
+      alert(`Couldn't delete selected orders (${error.name}: ${error.message}).`);
+    }
+  });
 });
 
 async function renderOrdersList() {
