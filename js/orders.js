@@ -47,16 +47,20 @@ function renderOrdersList() {
                 </div>
               </div>
             </div>
-            <div style="display:flex; align-items:center; gap:1rem;">
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.7rem;">
               <span class="price" style="margin:0;">$${order.total.toFixed(2)}</span>
-              <select class="payment-status-select" data-id="${order.id}">
-                ${PAYMENT_STATUSES.map((s) => `<option value="${s}" ${s === (order.paymentStatus || "Unpaid") ? "selected" : ""}>${s}</option>`).join("")}
-              </select>
-              <select class="order-status-select" data-id="${order.id}">
-                ${ORDER_STATUSES.map((s) => `<option value="${s}" ${s === order.status ? "selected" : ""}>${s}</option>`).join("")}
-              </select>
-              <button class="btn btn-outline order-export-btn" data-id="${order.id}">Export</button>
-              <button class="btn btn-outline order-delete-btn" data-id="${order.id}">Delete</button>
+              <div style="display:flex; align-items:center; gap:0.7rem;">
+                <select class="payment-status-select" data-id="${order.id}">
+                  ${PAYMENT_STATUSES.map((s) => `<option value="${s}" ${s === (order.paymentStatus || "Unpaid") ? "selected" : ""}>${s}</option>`).join("")}
+                </select>
+                <select class="order-status-select" data-id="${order.id}">
+                  ${ORDER_STATUSES.map((s) => `<option value="${s}" ${s === order.status ? "selected" : ""}>${s}</option>`).join("")}
+                </select>
+              </div>
+              <div style="display:flex; gap:0.7rem;">
+                <button class="btn btn-outline order-export-btn" data-id="${order.id}">Export</button>
+                <button class="btn btn-outline order-delete-btn" data-id="${order.id}">Delete</button>
+              </div>
             </div>
           </div>
         </div>
