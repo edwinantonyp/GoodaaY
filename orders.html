@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — GooDaaY Admin</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <span style="color:var(--text-muted); font-size:0.9rem;">Admin</span>
+    <a href="admin.html" class="btn btn-outline" style="margin-left:1rem;">Product Manager</a>
+  </nav>
+</header>
+
+<section>
+  <div class="container">
+
+    <div id="admin-lock" class="admin-lock">
+      <h1>Admin Login</h1>
+      <p style="color:var(--text-muted);">This area is for store admins only.</p>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Log In</button>
+        <p class="form-status" id="admin-login-error"></p>
+      </form>
+    </div>
+
+    <div id="admin-panel" style="display:none; padding-top:2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <div>
+          <h1 style="margin-bottom:0.2rem;">Orders Dashboard</h1>
+          <p style="color:var(--text-muted); margin:0;">See customer details and items purchased, and update each order's status.</p>
+        </div>
+        <button id="admin-logout" class="btn btn-outline">Log Out</button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-muted); font-size:0.9rem;">
+          <input type="checkbox" id="orders-select-all"> Select all
+        </label>
+        <button id="orders-export-selected" class="btn btn-outline">Export Selected (CSV)</button>
+      </div>
+
+      <div id="orders-empty" class="cart-empty" style="display:none;">No orders have been placed yet.</div>
+      <div id="orders-list"></div>
+    </div>
+
+  </div>
+</section>
+
+<script src="js/auth.js"></script>
+<script src="js/orders-data.js"></script>
+<script src="js/script.js"></script>
+<script src="js/orders.js"></script>
+</body>
+</html>

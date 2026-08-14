@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — GooDaaY</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <span style="color:var(--text-muted); font-size:0.9rem;">Admin</span>
+    <a href="orders.html" class="btn btn-outline" style="margin-left:1rem;">Dashboard</a>
+  </nav>
+</header>
+
+<section>
+  <div class="container">
+
+    <div id="admin-lock" class="admin-lock">
+      <h1>Admin Login</h1>
+      <p style="color:var(--text-muted);">This area is for store admins only.</p>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Log In</button>
+        <p class="form-status" id="admin-login-error"></p>
+      </form>
+    </div>
+
+    <div id="admin-panel" style="display:none; padding-top:2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <div>
+          <h1 style="margin-bottom:0.2rem;">Product Manager</h1>
+          <p style="color:var(--text-muted); margin:0;">Add, edit, or remove products and categories. Changes appear immediately on the Shop and Home pages.</p>
+        </div>
+        <div>
+          <button id="admin-reset" class="btn btn-outline">Reset Demo Data</button>
+          <button id="admin-logout" class="btn btn-outline" style="margin-left:0.6rem;">Log Out</button>
+        </div>
+      </div>
+      <p id="admin-storage-usage" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;"></p>
+
+      <form id="admin-new-category-form" style="display:flex; gap:0.6rem; margin-bottom:0.8rem;">
+        <input type="text" id="admin-new-category-name" placeholder="New category name (e.g. Kitchenware)" required style="flex:1;">
+        <button type="submit" class="btn btn-outline">+ New Category</button>
+      </form>
+
+      <form id="admin-delete-category-form" style="display:flex; align-items:flex-start; gap:0.6rem; margin-bottom:1.2rem;">
+        <div class="dropdown-checklist" id="admin-delete-category-dropdown" style="flex:1;">
+          <button type="button" class="btn btn-outline dropdown-toggle" id="admin-delete-dropdown-toggle">Select categories to delete &#9662;</button>
+          <div class="dropdown-menu" id="admin-delete-dropdown-menu"></div>
+        </div>
+        <button type="submit" class="btn btn-outline">Delete Selected</button>
+      </form>
+
+      <div class="tag-filters" id="admin-category-tabs"></div>
+
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <h2 id="admin-active-title" style="margin:0;"></h2>
+          <button class="btn btn-primary" id="admin-add-product-btn">+ Add Product</button>
+        </div>
+        <div id="admin-active-list"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script src="js/auth.js"></script>
+<script src="js/products-data.js"></script>
+<script src="js/categories-data.js"></script>
+<script src="js/script.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout — GooDaaY</title>
+<meta name="description" content="Enter your details to complete your GooDaaY order." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="cart.html" class="cart-link">Cart <span class="cart-count">0</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero hero-small">
+  <div class="container">
+    <h1>Checkout</h1>
+    <p>Enter your details below to complete your order.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+
+    <div id="checkout-empty" class="cart-empty" style="display:none;">
+      Your cart is empty. <a href="shop.html">Browse the shop</a> before checking out.
+    </div>
+
+    <div id="checkout-content" class="contact-grid">
+      <div>
+        <h2>Order Summary</h2>
+        <div id="checkout-summary-list"></div>
+        <div class="cart-summary">
+          <span>Total</span>
+          <span class="total" id="checkout-total">$0.00</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Your Details</h2>
+        <form id="checkout-form">
+          <div class="form-group">
+            <label for="co-name">Full Name</label>
+            <input type="text" id="co-name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="co-email">Email</label>
+            <input type="email" id="co-email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="co-phone">Phone</label>
+            <input type="tel" id="co-phone" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="co-address">Shipping Address</label>
+            <input type="text" id="co-address" name="address" required>
+          </div>
+          <div class="form-group">
+            <label for="co-city">City</label>
+            <input type="text" id="co-city" name="city" required>
+          </div>
+          <div class="form-group">
+            <label for="co-zip">ZIP / Postal Code</label>
+            <input type="text" id="co-zip" name="zip" required>
+          </div>
+          <div class="form-group">
+            <label for="co-notes">Order Notes (optional)</label>
+            <textarea id="co-notes" name="notes" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Method</label>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="card" checked> Credit / Debit Card
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="cod"> Cash on Delivery
+              </label>
+            </div>
+          </div>
+
+          <div id="card-payment-fields">
+            <div class="form-group">
+              <label for="co-card-name">Name on Card</label>
+              <input type="text" id="co-card-name" name="card-name">
+            </div>
+            <div class="form-group">
+              <label for="co-card-number">Card Number</label>
+              <input type="text" id="co-card-number" name="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+            </div>
+            <div class="grid grid-2" style="gap:1rem;">
+              <div class="form-group">
+                <label for="co-card-expiry">Expiry (MM/YY)</label>
+                <input type="text" id="co-card-expiry" name="card-expiry" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label for="co-card-cvv">CVV</label>
+                <input type="text" id="co-card-cvv" name="card-cvv" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;">Place Order</button>
+          <p class="form-status" id="checkout-status"></p>
+        </form>
+      </div>
+    </div>
+
+    <div id="checkout-confirmation" class="card" style="display:none; max-width:600px; margin:2rem auto; text-align:center;">
+      <h2>Thank you, <span id="checkout-confirm-name"></span>!</h2>
+      <p>Your order has been received and will be shipped to:</p>
+      <p style="color:var(--text-muted);" id="checkout-confirm-address"></p>
+      <p>Payment method: <strong id="checkout-confirm-payment"></strong></p>
+      <p>We'll send order confirmation and shipping updates to <strong id="checkout-confirm-email"></strong>.</p>
+      <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>GooDaaY</h4>
+        <p>Handcrafted goods made with heart, for people who love unique, sustainable design.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@goodaay.com</li>
+          <li>+1 (555) 123-4567</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span id="year"></span> GooDaaY. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="js/orders-data.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

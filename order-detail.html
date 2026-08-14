@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Order Details — GooDaaY Admin</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <span style="color:var(--text-muted); font-size:0.9rem;">Admin</span>
+    <a href="orders.html" class="btn btn-outline" style="margin-left:1rem;">Back to Dashboard</a>
+  </nav>
+</header>
+
+<section>
+  <div class="container">
+
+    <div id="admin-lock" class="admin-lock">
+      <h1>Admin Login</h1>
+      <p style="color:var(--text-muted);">This area is for store admins only.</p>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Log In</button>
+        <p class="form-status" id="admin-login-error"></p>
+      </form>
+    </div>
+
+    <div id="admin-panel" style="display:none; padding-top:2rem;" data-logout-hidden>
+      <div id="order-detail-root"></div>
+    </div>
+
+  </div>
+</section>
+
+<script src="js/auth.js"></script>
+<script src="js/orders-data.js"></script>
+<script src="js/script.js"></script>
+<script>
+  setupAdminLoginGate(renderOrderDetail);
+
+  function renderOrderDetail() {
+    const root = document.getElementById("order-detail-root");
+    const id = new URLSearchParams(window.location.search).get("id");
+    const order = id ? getOrderById(id) : null;
+
+    if (!order) {
+      root.innerHTML = `
+        <h1>Order Not Found</h1>
+        <p>This order may have been removed.</p>
+        <a href="orders.html" class="btn btn-primary">Back to Dashboard</a>
+      `;
+      return;
+    }
+
+    const placedOn = new Date(order.date).toLocaleString();
+    const paymentLabels = { card: `Card ending in ${order.payment?.cardLast4}`, cod: "Cash on Delivery" };
+    const paymentLabel = order.payment ? paymentLabels[order.payment.method] || order.payment.method : "N/A";
+    const itemsHtml = order.items
+      .map(
+        (item) => `
+        <div class="order-item-row">
+          <span>${item.qty} &times; ${item.name}</span>
+          <span>$${(item.price * item.qty).toFixed(2)}</span>
+        </div>
+      `
+      )
+      .join("");
+
+    root.innerHTML = `
+      <div class="order-card-header" style="align-items:center;">
+        <div>
+          <h1 style="margin-bottom:0.2rem;">Order #${order.id.slice(-6)}</h1>
+          <p style="color:var(--text-muted); margin:0;">Placed ${placedOn}</p>
+        </div>
+        <div style="display:flex; gap:0.6rem;">
+          <select class="payment-status-select" id="order-detail-payment-status">
+            ${PAYMENT_STATUSES.map((s) => `<option value="${s}" ${s === (order.paymentStatus || "Unpaid") ? "selected" : ""}>${s}</option>`).join("")}
+          </select>
+          <select class="order-status-select" id="order-detail-status">
+            ${ORDER_STATUSES.map((s) => `<option value="${s}" ${s === order.status ? "selected" : ""}>${s}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-outline" id="order-detail-delete" style="margin-bottom:1.5rem;">Delete Order</button>
+
+      <div class="order-columns">
+        <div>
+          <h3 style="margin-top:0;">Customer</h3>
+          <p style="margin:0.2rem 0;"><strong>${order.customer.name}</strong></p>
+          <p style="margin:0.2rem 0; color:var(--text-muted);">${order.customer.email}</p>
+          <p style="margin:0.2rem 0; color:var(--text-muted);">${order.customer.phone}</p>
+          <p style="margin:0.2rem 0; color:var(--text-muted);">${order.customer.address}, ${order.customer.city} ${order.customer.zip}</p>
+          <p style="margin:0.6rem 0 0;">Payment: <strong>${paymentLabel}</strong></p>
+          ${order.customer.notes ? `<p style="margin:0.6rem 0 0; color:var(--text-muted);"><em>Notes: ${order.customer.notes}</em></p>` : ""}
+        </div>
+        <div>
+          <h3 style="margin-top:0;">Items Purchased</h3>
+          ${itemsHtml}
+          <div class="order-item-row" style="border-top:1px solid var(--border); margin-top:0.5rem; padding-top:0.6rem; color:var(--gold); font-weight:700;">
+            <span>Total</span>
+            <span>$${order.total.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("order-detail-status").addEventListener("change", (e) => {
+      updateOrderStatus(order.id, e.target.value);
+      showToast("Order status updated");
+    });
+
+    document.getElementById("order-detail-payment-status").addEventListener("change", (e) => {
+      updatePaymentStatus(order.id, e.target.value);
+      showToast("Payment status updated");
+    });
+
+    document.getElementById("order-detail-delete").addEventListener("click", () => {
+      if (confirm(`Delete order #${order.id.slice(-6)} from ${order.customer.name}? This cannot be undone.`)) {
+        deleteOrder(order.id);
+        window.close();
+      }
+    });
+  }
+</script>
+</body>
+</html>

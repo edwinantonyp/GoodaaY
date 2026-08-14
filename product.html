@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Product Details — GooDaaY</title>
+<meta name="description" content="Product details for GooDaaY handmade craft products." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="cart.html" class="cart-link">Cart <span class="cart-count">0</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<section>
+  <div class="container" style="padding-top:2.5rem; padding-bottom:4rem;" id="product-detail-root">
+    <p>Loading product…</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>GooDaaY</h4>
+        <p>Handcrafted goods made with heart, for people who love unique, sustainable design.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@goodaay.com</li>
+          <li>+1 (555) 123-4567</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span id="year"></span> GooDaaY. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="js/products-data.js"></script>
+<script src="js/categories-data.js"></script>
+<script src="js/script.js"></script>
+<script>
+  const root = document.getElementById("product-detail-root");
+  const id = new URLSearchParams(window.location.search).get("id");
+  const product = id ? getProductById(id) : null;
+
+  if (!product) {
+    root.innerHTML = `
+      <p class="breadcrumb"><a href="shop.html">Shop</a> / Not Found</p>
+      <h1>Product Not Found</h1>
+      <p>Sorry, we couldn't find that product. It may have been removed.</p>
+      <a href="shop.html" class="btn btn-primary">Back to Shop</a>
+    `;
+  } else {
+    document.title = `${product.name} — GooDaaY`;
+    const images = product.images
+      .map((src, i) => `<img src="${src}" alt="${product.name} photo ${i + 1}" class="${i === 0 ? "active" : ""}">`)
+      .join("");
+    const dots = product.images
+      .map((_, i) => `<button class="${i === 0 ? "active" : ""}" aria-label="Image ${i + 1}"></button>`)
+      .join("");
+    const paragraphs = product.description.map((p) => `<p>${p}</p>`).join("");
+    const meta = product.meta.map((m) => `<li><strong>${m.label}:</strong> ${m.value}</li>`).join("");
+    const firstImage = product.images[0] || "";
+
+    root.innerHTML = `
+      <p class="breadcrumb"><a href="shop.html">Shop</a> / ${product.name}</p>
+      <div class="product-detail">
+        <div class="product-gallery">
+          ${images}
+          <button class="gallery-nav gallery-prev" aria-label="Previous image">&#10094;</button>
+          <button class="gallery-nav gallery-next" aria-label="Next image">&#10095;</button>
+          <div class="gallery-dots">${dots}</div>
+        </div>
+        <div>
+          <span class="detail-category">${getCategoryLabel(product.category)}</span>
+          <h1>${product.name}</h1>
+          <p class="detail-price">$${product.price.toFixed(2)}</p>
+          ${paragraphs}
+          <div class="detail-actions">
+            <button class="btn btn-outline btn-add-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-img="${firstImage}">Add to Cart</button>
+            <button class="btn btn-primary btn-buy-now" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-img="${firstImage}" data-cart-url="cart.html">Buy Now</button>
+          </div>
+          <ul class="detail-meta">${meta}</ul>
+        </div>
+      </div>
+    `;
+    initProductInteractions(root);
+  }
+</script>
+</body>
+</html>

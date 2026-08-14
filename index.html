@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GooDaaY — Handcrafted Craft Products</title>
+<meta name="description" content="GooDaaY sells unique handmade craft products, made with love and care." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="cart.html" class="cart-link">Cart <span class="cart-count">0</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Handcrafted Treasures, Made With Heart</h1>
+    <p>GooDaaY brings you one-of-a-kind craft products — each piece handmade, sustainable, and full of character.</p>
+    <a href="shop.html" class="btn btn-primary">Shop the Collection</a>
+    <a href="about.html" class="btn btn-outline" style="margin-left:1rem;">Our Story</a>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-title">
+      <span>Why GooDaaY</span>
+      <h2>Crafted With Care, Built to Last</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="icon">🖐️</div>
+        <h3>100% Handmade</h3>
+        <p>Every product is individually crafted by skilled artisans — no two pieces are exactly alike.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🌿</div>
+        <h3>Sustainable Materials</h3>
+        <p>We source eco-friendly materials to keep our craft kind to the planet.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🚚</div>
+        <h3>Fast, Careful Shipping</h3>
+        <p>Packed with love and shipped quickly so your treasures arrive safely.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt-bg">
+  <div class="container">
+    <div class="section-title">
+      <span>Featured</span>
+      <h2>Popular Picks</h2>
+    </div>
+    <div class="grid grid-3" id="featured-grid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="text-align:center;">
+    <h2>Ready to find your next favorite piece?</h2>
+    <p style="color:var(--text-muted); max-width:520px; margin:0 auto 1.5rem;">Explore the full collection of handmade craft goods, made just for you.</p>
+    <a href="shop.html" class="btn btn-primary">Browse the Shop</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>GooDaaY</h4>
+        <p>Handcrafted goods made with heart, for people who love unique, sustainable design.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@goodaay.com</li>
+          <li>+1 (555) 123-4567</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span id="year"></span> GooDaaY. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="js/products-data.js"></script>
+<script src="js/categories-data.js"></script>
+<script src="js/script.js"></script>
+<script>
+  renderFeaturedGrid(document.getElementById("featured-grid"), 3);
+</script>
+</body>
+</html>

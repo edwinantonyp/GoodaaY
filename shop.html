@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shop — GooDaaY</title>
+<meta name="description" content="Browse GooDaaY's collection of handmade craft products." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="navbar">
+    <a href="index.html" class="brand">GooDaaY</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="cart.html" class="cart-link">Cart <span class="cart-count">0</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero hero-small">
+  <div class="container">
+    <h1>Shop the Collection</h1>
+    <p>Handmade craft products for your home, gifting, and everyday joy.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="shop-search">
+      <input type="search" id="shop-search-input" placeholder="Search products...">
+    </div>
+
+    <div class="tag-filters" id="tag-filters"></div>
+
+    <div class="grid grid-3" id="product-grid"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>GooDaaY</h4>
+        <p>Handcrafted goods made with heart, for people who love unique, sustainable design.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@goodaay.com</li>
+          <li>+1 (555) 123-4567</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span id="year"></span> GooDaaY. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="js/products-data.js"></script>
+<script src="js/categories-data.js"></script>
+<script src="js/script.js"></script>
+<script>
+  renderShopGrid(document.getElementById("product-grid"), document.getElementById("tag-filters"), document.getElementById("shop-search-input"));
+</script>
+</body>
+</html>
