@@ -20,9 +20,11 @@ async function supabaseRequest(path, options = {}) {
   });
 
   if (!response.ok) {
-    throw new Error(`Supabase request failed (${response.status})`);
+    const errorText = await response.text();
+    throw new Error(`Supabase request failed (${response.status}): ${errorText}`);
   }
-  return response.status === 204 ? null : response.json();
+  const responseText = await response.text();
+  return responseText ? JSON.parse(responseText) : null;
 }
 
 function getLocalOrders() {
