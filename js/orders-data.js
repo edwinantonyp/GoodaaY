@@ -23,6 +23,9 @@ async function supabaseRequest(path, options = {}) {
     const errorText = await response.text();
     throw new Error(`Supabase request failed (${response.status}): ${errorText}`);
   }
+  if (options.method && options.method !== "GET") {
+    return null;
+  }
   const responseText = (await response.text()).trim();
   return responseText ? JSON.parse(responseText) : null;
 }
