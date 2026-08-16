@@ -119,7 +119,7 @@ async function renderOrdersList() {
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
       const order = await getOrderById(btn.dataset.id);
-      if (confirm(`Delete order #${order.id.slice(-6)} from ${order.customer.name}? This cannot be undone.`)) {
+      if (confirm(`Delete order ${order.id} from ${order.customer.name}? This cannot be undone.`)) {
         await deleteOrder(btn.dataset.id);
         renderOrdersList();
         showToast("Order deleted");

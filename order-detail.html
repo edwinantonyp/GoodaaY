@@ -79,7 +79,7 @@
       <div class="print-company-name">GooDaaY</div>
       <div class="order-card-header" style="align-items:center;">
         <div>
-          <h1 style="margin-bottom:0.2rem;">Order #${order.id.slice(-6)}</h1>
+          <h1 style="margin-bottom:0.2rem;">Order ID: ${order.id}</h1>
           <p style="color:var(--text-muted); margin:0;">Placed ${placedOn}</p>
         </div>
         <div style="display:flex; gap:0.6rem;">
@@ -133,7 +133,7 @@
     });
 
     document.getElementById("order-detail-delete").addEventListener("click", async () => {
-      if (confirm(`Delete order #${order.id.slice(-6)} from ${order.customer.name}? This cannot be undone.`)) {
+      if (confirm(`Delete order ${order.id} from ${order.customer.name}? This cannot be undone.`)) {
         await deleteOrder(order.id);
         window.close();
       }
