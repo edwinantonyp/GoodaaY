@@ -4,16 +4,6 @@ let activeCategory = null;
 document.addEventListener("DOMContentLoaded", () => {
   setupAdminLoginGate(() => Promise.all([initializeCategories(), initializeProducts()]).then(renderAdminUI).catch(handleCategoryError));
 
-  document.getElementById("admin-reset")?.addEventListener("click", async () => {
-    if (confirm("Reset the store back to the original demo categories and products? This removes any categories or products you added or edited.")) {
-      await resetProductsToDefault();
-      await resetCategoriesToDefault();
-      activeCategory = null;
-      renderAdminUI();
-      showToast("Store reset to defaults");
-    }
-  });
-
   document.getElementById("admin-new-category-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const input = document.getElementById("admin-new-category-name");
@@ -382,7 +372,7 @@ function openProductModal(product, defaultCategory) {
       alert(
         `Couldn't save this product (${err.name}: ${err.message}).\n\n` +
           "This usually means your browser's local storage is full from large images — " +
-          "try removing an image, using fewer/smaller photos, or resetting demo data."
+          "try removing an image or using fewer/smaller photos."
       );
       return;
     }
