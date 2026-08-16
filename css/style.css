@@ -334,6 +334,7 @@ section {
   height: 180px;
   overflow: hidden;
   background: #f4ecdc;
+  touch-action: pan-y;
 }
 
 .product-gallery img {
@@ -401,6 +402,12 @@ section {
 
 .gallery-dots button.active {
   background: var(--gold);
+}
+
+@media (max-width: 700px) {
+  .gallery-nav {
+    display: none;
+  }
 }
 
 .product-body {

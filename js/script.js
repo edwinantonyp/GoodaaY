@@ -196,6 +196,10 @@ function initGalleries(root) {
     const images = gallery.querySelectorAll("img");
     const dots = gallery.querySelectorAll(".gallery-dots button");
     let current = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
+    let suppressClick = false;
 
     const show = (index) => {
       current = (index + images.length) % images.length;
@@ -206,6 +210,39 @@ function initGalleries(root) {
     gallery.querySelector(".gallery-prev")?.addEventListener("click", () => show(current - 1));
     gallery.querySelector(".gallery-next")?.addEventListener("click", () => show(current + 1));
     dots.forEach((dot, i) => dot.addEventListener("click", () => show(i)));
+
+    gallery.addEventListener("touchstart", (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchMoved = false;
+    }, { passive: true });
+
+    gallery.addEventListener("touchmove", (event) => {
+      const touch = event.changedTouches[0];
+      touchMoved = Math.abs(touch.clientX - touchStartX) > 10 || Math.abs(touch.clientY - touchStartY) > 10;
+    }, { passive: true });
+
+    gallery.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      const isHorizontalSwipe = touchMoved && Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY);
+
+      if (isHorizontalSwipe) {
+        show(deltaX < 0 ? current + 1 : current - 1);
+        suppressClick = true;
+        window.setTimeout(() => {
+          suppressClick = false;
+        }, 400);
+      }
+    }, { passive: true });
+
+    gallery.addEventListener("click", (event) => {
+      if (!suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
 
     show(0);
   });
