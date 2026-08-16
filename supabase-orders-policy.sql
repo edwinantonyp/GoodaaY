@@ -10,6 +10,13 @@ for insert
 to anon, authenticated
 with check (true);
 
+drop policy if exists "Anyone can read orders" on public.orders;
+create policy "Anyone can read orders"
+on public.orders
+for select
+to anon, authenticated
+using (true);
+
 -- Verify the policy exists after running this script:
 select policyname, cmd, roles
 from pg_policies
