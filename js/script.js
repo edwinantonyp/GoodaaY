@@ -408,7 +408,11 @@ function initCheckoutPage(listEl) {
       });
     } catch (err) {
       console.error("Place order failed:", err);
-      alert(`Couldn't place your order (${err.name}: ${err.message}). Your browser's local storage may be full.`);
+      const status = document.getElementById("checkout-status");
+      if (status) {
+        status.textContent = "We couldn't place your order yet. Please try again or contact us for help.";
+        status.style.color = "#c62828";
+      }
       return;
     }
 
