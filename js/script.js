@@ -353,8 +353,9 @@ function initCheckoutPage(listEl) {
   const paymentLabels = { card: "Credit / Debit Card", cod: "Cash on Delivery" };
 
   const toggleCardFields = () => {
-    const method = document.querySelector('input[name="payment-method"]:checked').value;
-    cardFields.style.display = method === "card" ? "block" : "none";
+    const selectedPayment = document.querySelector('input[name="payment-method"]:checked');
+    if (!selectedPayment) return;
+    if (cardFields) cardFields.style.display = selectedPayment.value === "card" ? "block" : "none";
   };
   document.querySelectorAll('input[name="payment-method"]').forEach((radio) => {
     radio.addEventListener("change", toggleCardFields);
@@ -372,7 +373,12 @@ function initCheckoutPage(listEl) {
     const city = document.getElementById("co-city").value.trim();
     const zip = document.getElementById("co-zip").value.trim();
     const notes = document.getElementById("co-notes").value.trim();
-    const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+    const selectedPayment = document.querySelector('input[name="payment-method"]:checked');
+    if (!selectedPayment) {
+      document.getElementById("checkout-status").textContent = "Please select a payment method.";
+      return;
+    }
+    const paymentMethod = selectedPayment.value;
 
     let paymentDetails = { method: paymentMethod };
     if (paymentMethod === "card") {
