@@ -410,7 +410,10 @@ function initCheckoutPage(listEl) {
       console.error("Place order failed:", err);
       const status = document.getElementById("checkout-status");
       if (status) {
-        status.textContent = "We couldn't place your order yet. Please try again or contact us for help.";
+        const databaseBlocked = err.message?.includes("row-level security policy");
+        status.textContent = databaseBlocked
+          ? "Orders are temporarily unavailable. Please contact the store owner."
+          : "We couldn't place your order yet. Please try again or contact us for help.";
         status.style.color = "#c62828";
       }
       return;

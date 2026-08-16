@@ -21,9 +21,6 @@ async function supabaseRequest(path, options = {}) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    if (response.status === 401 && errorText.includes("row-level security policy")) {
-      throw new Error("Supabase is blocking order inserts. Run the orders INSERT policy from SUPABASE_SETUP.md.");
-    }
     throw new Error(`Supabase request failed (${response.status}): ${errorText}`);
   }
   if (options.method && options.method !== "GET") {
