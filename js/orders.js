@@ -72,7 +72,7 @@ async function renderOrdersList() {
             <div style="display:flex; align-items:flex-start; gap:0.8rem;">
               <input type="checkbox" class="order-select" data-id="${order.id}" style="margin-top:0.3rem;">
               <div>
-                <strong>Order #${order.id.slice(-6)}</strong>
+                <strong>Order ID: ${order.id}</strong>
                 <div style="color:var(--text-muted); font-size:0.85rem;">
                   ${order.customer.name} &middot; ${itemCount} item${itemCount === 1 ? "" : "s"} &middot; ${paymentLabel} &middot; Placed ${placedOn}
                 </div>
