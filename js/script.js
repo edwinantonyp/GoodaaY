@@ -434,8 +434,9 @@ function initCheckoutPage(listEl) {
       paymentDetails.cardExpiry = cardExpiry;
     }
 
+    let createdOrder;
     try {
-      await addOrder({
+      createdOrder = await addOrder({
         customer: { name, email, phone, address, city, zip, notes },
         payment: paymentDetails,
         // Images aren't shown on the orders dashboard; drop them so large uploaded
@@ -457,6 +458,7 @@ function initCheckoutPage(listEl) {
     }
 
     document.getElementById("checkout-confirm-name").textContent = name;
+  document.getElementById("checkout-confirm-order-id").textContent = createdOrder.id;
     document.getElementById("checkout-confirm-email").textContent = email;
     document.getElementById("checkout-confirm-address").textContent = `${address}, ${city} ${zip}`;
     document.getElementById("checkout-confirm-payment").textContent =
